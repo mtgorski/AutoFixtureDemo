@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
 using Ploeh.AutoFixture;
 
 namespace AutofixtureDemo
@@ -7,14 +10,16 @@ namespace AutofixtureDemo
     [TestClass]
     public class HideIrrelevantDetails
     {
-        public ShippingService ShippingService => new ShippingService();
+        private ShippingService _shippingService;
+        public ShippingService ShippingService => _shippingService ?? (_shippingService = new ShippingService());
 
         [TestMethod]
-        public void GivenInvalidState_ReturnInvalidResponse()
+        public void GivenInvalidState_WhenShip_ReturnInvalidResponse()
         {
             var order = new Order
             {
-                CustomerAddress = new Address
+                OrderId = Guid.NewGuid(),
+                ShippingAddress = new Address
                 {
                     AddressLine1 = "43 Hillside Dr.",
                     CustomerName = "Matt G.",
@@ -38,17 +43,19 @@ namespace AutofixtureDemo
         }
 
         [TestMethod]
-        public void Improved()
+        public void Improved_GivenInvalidState_WhenShip_ReturnInvalidResponse()
         {
             var fixture = new Fixture();
             var order = fixture.Create<Order>();
-            order.CustomerAddress.State = "Ohio";
+            order.ShippingAddress.State = "Ohio";
+            Debug.WriteLine(JsonConvert.SerializeObject(order, Formatting.Indented));
 
             var response = ShippingService.ShipOrder(order);
             Assert.IsFalse(response.IsValidRequest);
             Assert.AreEqual(
-                string.Format("{0} is not a valid state abbreviation.", order.CustomerAddress.State),
+                string.Format("{0} is not a valid state abbreviation.", order.ShippingAddress.State),
                 response.ErrorMessage);
         }
+
     }
 }

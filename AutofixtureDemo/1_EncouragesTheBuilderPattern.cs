@@ -11,7 +11,7 @@ namespace AutofixtureDemo
         public void GivenSpecialCustomerAndSpecialProductAndCreditCardOrder_WhenShipOrder_ReturnFreeShipping()
         {
             var order = OrderTemplate.GetValidOrder();
-            order.CustomerAddress.CustomerName = "Matt";
+            order.ShippingAddress.CustomerName = "Matt";
             order.CreditOrder = true;
             order.BillingAddress = new Address
             {

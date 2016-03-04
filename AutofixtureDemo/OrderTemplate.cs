@@ -8,8 +8,14 @@ namespace AutofixtureDemo
         {
             return new Order
             {
-                CustomerAddress = new Address
+                ShippingAddress = new Address
                 {
+                    CustomerName = "Matt G.",
+                    State = "OH"
+                },
+                BillingAddress = new Address
+                {
+                    CustomerName = "Matt G.",
                     State = "OH"
                 },
                 Products = new List<Product>

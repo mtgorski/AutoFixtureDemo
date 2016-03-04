@@ -9,7 +9,7 @@ namespace AutofixtureDemo
 {
     public class OrderFixture
     {
-        private Fixture _fixture;
+        private readonly Fixture _fixture;
         private IPostprocessComposer<Address> _addressComposer;
         private IPostprocessComposer<Order> _orderComposer;
 
@@ -29,7 +29,7 @@ namespace AutofixtureDemo
 
         public Order Build()
         {
-            return _orderComposer.With(x => x.CustomerAddress, _addressComposer.Create())
+            return _orderComposer.With(x => x.ShippingAddress, _addressComposer.Create())
                 .With(x => x.BillingAddress, _addressComposer.Create())
                 .Create();
         }
